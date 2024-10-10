@@ -19,24 +19,29 @@ namespace MainForm.Controllers {
         }
         [HttpPost("post")]
         public IActionResult TimeAttendancePost([FromBody] TimeAttendanceModels info) {
+            if(info == null) {
+                return BadRequest("リクエストボディが空です。");
+            }
+
             using MySqlConnection connection = new MySqlConnection(connectionString);
             try {
                 connection.Open();
                 string postQuery = @"
-                    INSERT INTO timeattendancelist (EmployeeId, Name, CheckInTime, CheckOutTime, BreakTime, BreadEndTime, Date)
-                    VALUES (@EmployeeId, @Name, @CheckInTime, @CheckOutTime, @BreakTime, @BreadEndTime, @Date);
-                ";
+            INSERT INTO timeattendancelist (EmployeeId, CheckInTime, CheckOutTime, BreakTime, BreakEndTime, Date)
+            VALUES (@EmployeeId, @CheckInTime, @CheckOutTime, @BreakTime, @BreakEndTime, @Date);
+        ";
+
                 using(MySqlCommand cmd = new MySqlCommand(postQuery, connection)) {
                     cmd.Parameters.AddWithValue("@EmployeeId", info.EmployeeId);
-                    cmd.Parameters.AddWithValue("@Name", info.Name);
-                    cmd.Parameters.AddWithValue("@CheckInTime", info.CheckInTime);
-                    cmd.Parameters.AddWithValue("@CheckOutTime", info.CheckOutTime);
-                    cmd.Parameters.AddWithValue("@BreakTime", info.BreakTime);
-                    cmd.Parameters.AddWithValue("@BreadEndTime", info.BreadEndTime);
+                    cmd.Parameters.AddWithValue("@CheckInTime", info.CheckInTime.HasValue ? (object)info.CheckInTime.Value : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@CheckOutTime", info.CheckOutTime.HasValue ? (object)info.CheckOutTime.Value : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@BreakTime", info.BreakTime.HasValue ? (object)info.BreakTime.Value : DBNull.Value);
+                    cmd.Parameters.AddWithValue("@BreakEndTime", info.BreakEndTime.HasValue ? (object)info.BreakEndTime.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@Date", info.Date);
 
                     cmd.ExecuteNonQuery();
-                };
+                }
+
                 return Ok(new
                 {
                     message = "記録しました",
@@ -47,5 +52,6 @@ namespace MainForm.Controllers {
                 return StatusCode(500, ex.Message);
             }
         }
+
     }
 }

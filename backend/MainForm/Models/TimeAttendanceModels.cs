@@ -1,25 +1,31 @@
-﻿namespace MainForm.Models {
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MainForm.Models {
     public class TimeAttendanceModels {
+
         public int EmployeeId {
             get; set;
         }
-        public string? Name {
+
+        public TimeSpan? CheckInTime {
             get; set;
-        }
-        public DateTime CheckInTime {
+        } // 出勤時間
+
+        public TimeSpan? CheckOutTime {
             get; set;
-        }
-        public DateTime CheckOutTime {
+        } // 退勤時間
+
+        public TimeSpan? BreakTime {
             get; set;
-        }
-        public DateTime BreakTime {
+        } // 休憩時間
+
+        public TimeSpan? BreakEndTime {
             get; set;
-        }
-        public DateTime BreadEndTime {
+        } // 休憩終了時間
+
+        [Required]
+        public DateTime? Date {
             get; set;
-        }
-        public DateTime Date {
-            get; set;
-        }
+        } // 日付
     }
 }
