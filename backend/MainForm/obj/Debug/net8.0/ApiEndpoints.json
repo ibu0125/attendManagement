@@ -1,0 +1,18 @@
+[
+  {
+    "ContainingType": "MainForm.Controllers.TimeAttendance",
+    "Method": "TimeAttendancePost",
+    "RelativePath": "api/TimeAttendance/post",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "info",
+        "Type": "MainForm.Models.TimeAttendanceModels",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
