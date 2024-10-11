@@ -6,6 +6,9 @@ namespace MainForm.Models {
         public int EmployeeId {
             get; set;
         }
+        public string? Name {
+            get; set;
+        }
 
         public TimeSpan? CheckInTime {
             get; set;
@@ -23,9 +26,13 @@ namespace MainForm.Models {
             get; set;
         } // 休憩終了時間
 
-        [Required]
         public DateTime? Date {
             get; set;
         } // 日付
+
+        public int Hourly {
+            get; set;
+        }
+
     }
 }

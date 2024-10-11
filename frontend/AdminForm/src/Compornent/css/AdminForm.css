@@ -1,0 +1,147 @@
+.container {
+  position: relative;
+}
+
+.menu-bar {
+  position: relative;
+  top: 0;
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #f4f4f4;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  transform: translateX(100%); /* メニューを初期位置で隠す */
+  transition: transform 0.3s ease; /* スライドアニメーション */
+}
+
+.menu.open {
+  transform: translateX(0);
+}
+
+.button {
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background-color: rgb(128, 128, 205);
+  border-radius: 5px;
+}
+.button i {
+  user-select: none;
+  transition: 0.5s;
+  position: absolute;
+  left: 10px;
+  width: 40px;
+  height: 2px;
+  background-color: #fff;
+}
+.button i:nth-of-type(1) {
+  top: 20px;
+}
+.button i:nth-of-type(2) {
+  top: 30px;
+}
+.button i:nth-of-type(3) {
+  top: 40px;
+}
+.button.active i:nth-of-type(1) {
+  transform: translateY(10px) rotate(45deg);
+}
+.button.active i:nth-of-type(2) {
+  opacity: 0;
+}
+.button.active i:nth-of-type(3) {
+  transform: translateY(-10px) rotate(-45deg);
+}
+.list {
+  display: flex;
+  justify-content: center;
+  justify-content: space-around;
+  border: 1px solid rgba(0, 0, 0, 1);
+}
+
+.id-and-date {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+}
+
+.total {
+  margin-left: 20px;
+}
+
+.one-day-time {
+  display: grid;
+  place-items: center;
+}
+
+.rate-menu {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+}
+
+.arrow {
+  margin-left: 10px;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-left: 20px;
+}
+
+.menu-list > li {
+  position: relative;
+  padding: 0;
+}
+
+.menu-list li {
+  padding-left: 10px;
+}
+
+.menu-list > .close-list::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border: 0.3rem solid transparent;
+  border-left: 0.4rem solid black;
+  content: "";
+}
+
+.menu-list > .open-list::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border: 0.3rem solid transparent;
+  border-top: 0.4rem solid black;
+  content: "";
+}
+
+.container {
+  user-select: none;
+}

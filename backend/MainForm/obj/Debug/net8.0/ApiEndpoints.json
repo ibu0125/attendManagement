@@ -1,5 +1,78 @@
 [
   {
+    "ContainingType": "MainForm.Controllers.RegistrationController",
+    "Method": "HourlyRegiter",
+    "RelativePath": "api/Registration/Hourly/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "models",
+        "Type": "MainForm.Models.TimeAttendanceModels",
+        "IsRequired": true
+      },
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MainForm.Controllers.RegistrationController",
+    "Method": "Register",
+    "RelativePath": "api/Registration/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "models",
+        "Type": "MainForm.Models.CompanyElementsModels",
+        "IsRequired": true
+      },
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MainForm.Controllers.TimeAttendance",
+    "Method": "TimeUpdate",
+    "RelativePath": "api/TimeAttendance/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "info",
+        "Type": "MainForm.Models.TimeAttendanceModels",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MainForm.Controllers.TimeAttendance",
+    "Method": "TimeAttendanceGet",
+    "RelativePath": "api/TimeAttendance/get",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MainForm.Controllers.TimeAttendance",
     "Method": "TimeAttendancePost",
     "RelativePath": "api/TimeAttendance/post",
