@@ -19,18 +19,20 @@ namespace MainForm.Controllers {
             Console.WriteLine(connectionString);
         }
 
-        [HttpGet("get")]
-        public IActionResult TimeAttendanceGet() {
+        [HttpGet("get/{id}")]
+        public IActionResult TimeAttendanceGet(int id) {
             List<TimeAttendanceModels> lists = new List<TimeAttendanceModels>();
             using MySqlConnection connection = new MySqlConnection(connectionString);
             try {
                 connection.Open();
-                string getQuery = "SELECT * FROM TimeAttendanceList";
+                string getQuery = "SELECT * FROM TimeAttendanceList WHERE CompanyId = @CompanyId";
                 using(MySqlCommand cmd = new MySqlCommand(getQuery, connection)) {
+                    cmd.Parameters.AddWithValue("@CompanyId", id);
                     using(MySqlDataReader reader = cmd.ExecuteReader()) {
                         while(reader.Read()) {
                             var list = new TimeAttendanceModels
                             {
+                                CompanyId = reader.GetInt32("CompanyId"),
                                 Name = reader.IsDBNull("Name") ? default(string) : reader.GetString("Name"),
                                 EmployeeId = reader.GetInt32("EmployeeId"),
                                 CheckInTime = reader.IsDBNull("CheckInTime") ? default(TimeSpan) : reader.GetTimeSpan("CheckInTime"),
@@ -88,8 +90,8 @@ namespace MainForm.Controllers {
 
 
 
-        [HttpPost("post")]
-        public IActionResult TimeAttendancePost([FromBody] TimeAttendanceModels info) {
+        [HttpPost("post/{id}")]
+        public IActionResult TimeAttendancePost([FromBody] TimeAttendanceModels info, int id) {
             if(info == null) {
                 return BadRequest("リクエストボディが空です。");
             }
@@ -99,11 +101,11 @@ namespace MainForm.Controllers {
                 connection.Open();
                 string postQuery = @"
             INSERT INTO timeattendancelist (EmployeeId, CheckInTime, CheckOutTime, BreakTime, BreakEndTime, Date)
-            VALUES (@EmployeeId, @CheckInTime, @CheckOutTime, @BreakTime, @BreakEndTime, @Date);
+            VALUES (@EmployeeId, @CheckInTime, @CheckOutTime, @BreakTime, @BreakEndTime, @Date WHERE EmployeeId = @EmployeeId);
         ";
 
                 using(MySqlCommand cmd = new MySqlCommand(postQuery, connection)) {
-                    cmd.Parameters.AddWithValue("@EmployeeId", info.EmployeeId);
+                    cmd.Parameters.AddWithValue("@EmployeeId", id);
                     cmd.Parameters.AddWithValue("@CheckInTime", info.CheckInTime.HasValue ? (object)info.CheckInTime.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@CheckOutTime", info.CheckOutTime.HasValue ? (object)info.CheckOutTime.Value : DBNull.Value);
                     cmd.Parameters.AddWithValue("@BreakTime", info.BreakTime.HasValue ? (object)info.BreakTime.Value : DBNull.Value);

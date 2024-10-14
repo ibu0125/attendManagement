@@ -50,42 +50,58 @@ namespace MainForm.Controllers {
             }
         }
 
-        [HttpPost("register")]
-        public IActionResult Register([FromBody] CompanyElementsModels models, int id) {
+        [HttpPost("employeeRegister/{id}")]
+        public IActionResult Employ([FromBody] TimeAttendanceModels models, int id) {
             using MySqlConnection connection = new MySqlConnection(connectionString);
             try {
                 connection.Open();
-                string registerQuery = "INSERT INTO CompanyElements (Hourly, WorkplaceAddress, Email, Phone, Password,CompanyName) VALUES (@Hourly, @WorkplaceAddress, @Email, @Phone, @Password,@CompanyName)";
+                string employeeRegistQuer = "INSERT INTO TimeAttendanceList (Name,CompanyId) VALUES (@Name,@CompanyId)";
+                using(MySqlCommand cmd = new MySqlCommand(employeeRegistQuer, connection)) {
+                    cmd.Parameters.AddWithValue("@Name", models.Name);
+                    cmd.Parameters.AddWithValue("@CompanyId", id);
+                    cmd.ExecuteNonQuery();
+                }
+                return Ok(new
+                {
+                    message = "登録しました"
+                });
+            }
+            catch(Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] CompanyElementsModels models) {
+            using MySqlConnection connection = new MySqlConnection(connectionString);
+            try {
+                connection.Open();
+                string registerQuery = "INSERT INTO CompanyElements (Hourly, WorkplaceAddress, Email, Phone, Password, CompanyName) VALUES (@Hourly, @WorkplaceAddress, @Email, @Phone, @Password, @CompanyName); SELECT LAST_INSERT_ID();";
                 using(MySqlCommand cmd = new MySqlCommand(registerQuery, connection)) {
-                    cmd.Parameters.AddWithValue("@Hourly", models.Hourly);
+                    cmd.Parameters.AddWithValue("@Hourly", models.Hourly); // int型のHourlyを適切に渡す
                     cmd.Parameters.AddWithValue("@CompanyName", models.CompanyName);
                     cmd.Parameters.AddWithValue("@WorkplaceAddress", models.WorkplaceAddress);
                     cmd.Parameters.AddWithValue("@Email", models.Email);
                     cmd.Parameters.AddWithValue("@Phone", models.Phone);
                     cmd.Parameters.AddWithValue("@Password", models.Password);
 
-                    int affectedRows = cmd.ExecuteNonQuery();
-                    if(affectedRows > 0) {
-                        return Ok(new
-                        {
-                            Message = "Registration successful"
-                        });
-                    }
-                    else {
-                        return NotFound(new
-                        {
-                            message = "Record not found"
-                        });
-                    }
+                    // LONGとして取得、ここで適切な型に合わせる
+                    long newCompanyId = Convert.ToInt64(cmd.ExecuteScalar() ?? 0);
+                    return Ok(new
+                    {
+                        Message = "Registration successful",
+                        CompanyId = newCompanyId
+                    });
                 }
             }
             catch(Exception ex) {
                 return StatusCode(500, new
                 {
                     message = "サーバーエラーが発生しました",
-                    detail = ex.Message
+                    detail = ex.Message // デバッグ用に詳細メッセージを返す
                 });
             }
         }
+
+
     }
 }

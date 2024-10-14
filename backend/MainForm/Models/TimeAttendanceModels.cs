@@ -34,5 +34,9 @@ namespace MainForm.Models {
             get; set;
         }
 
+        public int CompanyId {
+            get; set;
+        }
+
     }
 }

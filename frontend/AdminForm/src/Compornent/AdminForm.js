@@ -2,17 +2,21 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./css/AdminForm.css";
 import ManagementSetting from "./ManagementSettings";
+import { useParams } from "react-router-dom";
 
 function AdminForm() {
   const [data, setData] = useState([]);
   const [userName, setUserName] = useState("");
   const [hourlyRate, setHourlyRate] = useState();
+  const { id } = useParams();
+
+  console.log("Fetched ID:", id);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5220/api/TimeAttendance/get"
+          `http://localhost:5220/api/TimeAttendance/get/${id}`
         );
         setData(response.data);
       } catch (error) {
@@ -20,8 +24,10 @@ function AdminForm() {
       }
     };
 
-    fetchData();
-  }, []);
+    if (id) {
+      fetchData();
+    }
+  }, [id]);
 
   const formatTime = (date) => {
     const hours = date.getHours().toString().padStart(2, "0");
@@ -115,6 +121,7 @@ function AdminForm() {
         </div>
         <div>
           <ManagementSetting
+            Id={id}
             hourlyRate={hourlyRate}
             setHourlyRate={setHourlyRate}
             userName={userName}

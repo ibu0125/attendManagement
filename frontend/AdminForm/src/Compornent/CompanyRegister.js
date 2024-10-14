@@ -30,9 +30,16 @@ function CompanyRegister() {
         formData
       );
       console.log("登録成功:", response.data);
-      navigate("/admin");
+      const companyId = response.data.CompanyId;
+      console.log(companyId);
+      navigate(`/admin/${companyId}`);
     } catch (error) {
-      console.error("登録エラー:", error);
+      if (error.response) {
+        // サーバーからのレスポンスがあった場合、エラーメッセージを出力
+        console.error("登録エラー:", error.response.data);
+      } else {
+        console.error("登録エラー:", error);
+      }
     }
   };
 
