@@ -11,7 +11,7 @@ function AdminForm() {
   const [hourlyRate, setHourlyRate] = useState();
   const { id } = useParams();
 
-  console.log("Fetched ID:", id);
+  // console.log("Fetched ID:", id);
 
   useEffect(() => {
     const fetchData = async () => {
