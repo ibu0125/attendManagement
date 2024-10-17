@@ -3,6 +3,7 @@ import axios from "axios";
 import "./css/AdminForm.css";
 import ManagementSetting from "./ManagementSettings";
 import { useParams } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 function AdminForm() {
   const [data, setData] = useState([]);
@@ -16,7 +17,7 @@ function AdminForm() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5220/api/TimeAttendance/get/${id}`
+          `https://mainformwebapp.azurewebsites.net/api/TimeAttendance/get/${id}`
         );
         setData(response.data);
       } catch (error) {
@@ -26,6 +27,20 @@ function AdminForm() {
 
     if (id) {
       fetchData();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+
+    const decoded = jwtDecode(token);
+    const userIdFromToken = parseInt(decoded.sub, 10);
+
+    console.log("User ID from token:", userIdFromToken, "URL ID:", id);
+    if (parseInt(userIdFromToken) !== parseInt(id)) {
+      window.location.href = `/admin/${userIdFromToken}`;
+      alert("不正なアクセスです。");
     }
   }, [id]);
 
@@ -48,7 +63,6 @@ function AdminForm() {
     const checkInTime = new Date(`${date.split("T")[0]}T${checkIn}`);
     const checkOutTime = new Date(`${date.split("T")[0]}T${checkOut}`);
 
-    // dateがnullまたは不正な場合の処理
     if (!date || typeof date !== "string") return "0.00";
 
     const breakStartTime = breakStart
@@ -97,7 +111,7 @@ function AdminForm() {
 
       try {
         const response = await axios.put(
-          `http://localhost:5220/api/TimeAttendance/${employeeId}`,
+          `https://mainformwebapp.azurewebsites.net/api/TimeAttendance/${employeeId}`,
           requestData
         );
 

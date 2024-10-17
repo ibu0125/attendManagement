@@ -26,7 +26,7 @@ function ManagementSetting({
     }
     try {
       const response = await axios.put(
-        "http://localhost:5220/api/Registration/Hourly",
+        "https://mainformwebapp.azurewebsites.net/api/Registration/Hourly",
         { Hourly: hourlyRate }
       );
       alert(response.data.Hourly);
@@ -40,7 +40,7 @@ function ManagementSetting({
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:5220/api/Registration/employeeRegister/${Id}`,
+        `https://mainformwebapp.azurewebsites.net/api/Registration/employeeRegister/${Id}`,
         { Name: userName }
       );
       alert(`${userName}さんを追加しました`);
@@ -53,7 +53,10 @@ function ManagementSetting({
   };
 
   const handleQrgenerater = () => {
-    navigate(`/QRcode/${qrNumber}`);
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate(`/QRcode/${qrNumber}`);
+    }
   };
 
   return (

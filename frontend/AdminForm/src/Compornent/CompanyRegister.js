@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +13,10 @@ function CompanyRegister() {
     Password: "",
   });
 
+  useEffect(() => {
+    localStorage.removeItem("token");
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -26,13 +30,20 @@ function CompanyRegister() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5220/api/Registration/register",
+        "https://mainformwebapp.azurewebsites.net/api/Registration/register",
         formData
       );
-      console.log("登録成功:", response.data);
+      console.log("登録成功:", response.data.token);
       const companyId = response.data.CompanyId;
       console.log(companyId);
-      navigate(`/admin/${companyId}`);
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        navigate(`/admin/${companyId}`);
+      } else {
+        alert("登録に失敗しました。");
+        navigate("/register");
+        localStorage.removeItem("token");
+      }
     } catch (error) {
       if (error.response) {
         // サーバーからのレスポンスがあった場合、エラーメッセージを出力

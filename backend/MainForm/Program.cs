@@ -1,4 +1,4 @@
-using MainForm.Models; // UserInfo モデルの名前空間をインポート
+using MainForm.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -10,15 +10,31 @@ DotNetEnv.Env.Load();
 
 Env.Load();
 
-//var secretKey = Environment.GetEnvironmentVariable("SECRET_KEY");
+var secretKey = Environment.GetEnvironmentVariable("SECRET_KEY");
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
+if(string.IsNullOrEmpty(secretKey)) {
+    throw new InvalidOperationException("SECRET_KEY環境変数が設定されていません。");
+}
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = null,
+        ValidAudience = null,
+    };
+});
 
-//秘密鍵
-//if(string.IsNullOrEmpty(secretKey)) {
-//    throw new InvalidOperationException("SECRET_KEY環境変数が設定されていません。");
-//}
 
 
 
